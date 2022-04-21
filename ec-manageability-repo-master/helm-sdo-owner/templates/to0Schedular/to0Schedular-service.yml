@@ -1,0 +1,140 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: to0scheduler
+  labels:
+    app: to0scheduler
+    #release: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: to0scheduler
+  template:
+    metadata:
+      name: to0scheduler
+      labels:
+        app: to0scheduler
+    spec:
+      containers:
+      - name: to0scheduler
+        image: {{ .Values.images.tags.to0scheduler  | quote }}
+        #image: localhost:5050/to0scheduler:1.10.2
+        imagePullPolicy: IfNotPresent
+        resources: 
+          requests:
+            cpu: {{ .Values.resources.requests.cpu  | quote }}
+            #cpu: 5
+            memory: {{ .Values.resources.requests.memory  | quote }}
+            #memory: 200Mi
+          limits:
+            memory: 500Mi
+        envFrom:
+        - configMapRef:
+            name: to0scheduler-config
+        
+        volumeMounts:
+        - name: redirect-properties
+          mountPath: /home/sdouser/to0scheduler/config/redirect.properties
+          readOnly: true
+
+      volumes:
+      - name: redirect-properties
+        hostPath:
+          path: {{ .Values.volumes.hostPath.to0schedulerConfigPath | quote }}
+          #path: ./to0scheduler/config/redirect.properties
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocs.deploy
+  labels:
+    app: sdo-ocs
+    release: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ocs
+  template:
+    metadata:
+      name: ocs.pod
+      labels:
+        app: ocs
+    spec:
+            #   initContainers:
+            # - name: init-to0scheduler
+            #  image: {{ .Values.images.tags.busyboximage }}
+            # image: busybox:1.28
+            #  command: ['sh', '-c', "until nslookup to0scheduler.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for to0scheduler; sleep 2; done"]
+      containers:
+      - name: owner-companion-service
+        image: {{ .Values.images.tags.ocs  | quote }}
+        imagePullPolicy: IfNotPresent
+        resources:
+           requests:
+             cpu: {{ .Values.resources.requests.cpu  | quote }}
+             memory: {{ .Values.resources.requests.memory  | quote }}
+           limits:
+             memory: {{ .Values.resources.limits.memory  | quote }}
+        envFrom:
+        - configMapRef:
+            name: ocs-config
+
+        volumeMounts:
+        - name: config-db
+          mountPath: /home/sdouser/ocs/config/db
+          readOnly: true
+
+      volumes:
+      - name: config-db
+        hostPath:
+          path: {{ .Values.volumes.hostPath.ocsConfigPath | quote }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ops.deploy
+  labels:
+    app: sdo-ops
+    release: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ops
+  template:
+    metadata:
+      name: ops.pod
+      labels:
+        app: ops
+    spec:
+            #  initContainers:
+            #  - name: init-ocs
+        #image: {{ .Values.images.tags.busyboximage }}
+        #  image: busybox:1.28
+        #  command: ['sh', '-c', "until nslookup ocs.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for ocs; sleep 2; done"]
+      containers:
+      - name: owner-protocol-service
+        image: {{ .Values.images.tags.ops  | quote }}
+        imagePullPolicy: IfNotPresent
+        resources:
+           requests:
+             cpu: {{ .Values.resources.requests.cpu  | quote }}
+             memory: {{ .Values.resources.requests.memory  | quote }}
+           limits:
+             memory: {{ .Values.resources.limits.memory  | quote }}
+        envFrom:
+        - configMapRef:
+            name: ops-config
+
+        volumeMounts:
+        - name: ondie-ecdsa-material
+          mountPath: /home/sdouser/ops/config/ondie-ecdsa-material
+          readOnly: true
+
+      volumes:
+      - name: ondie-ecdsa-material
+        hostPath:
+          path: {{ .Values.volumes.hostPath.opsConfigPath | quote }}

@@ -1,0 +1,102 @@
+# Default values for sample.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+images:
+  tags:
+    to0scheduler: 10.99.114.62:5050/library/to0scheduler:1.10.2
+    ocs: 10.99.114.62:5050/library/ocs:1.10.2
+    ops: 10.99.114.62:5050/library/ops:1.10.2
+    #resources:
+    #  requests:
+    # cpu: 5
+    # memory: 200Mi
+    #limits:
+    # memory: 500Mi
+volumes:
+  hostPath:
+    to0schedulerConfigPath: "/home/dell-01/Poornima/SDO/IOTPLATFORM/iot-platform-sdk-v1.10.2/to0scheduler/config/redirect.properties"
+    ocsConfigPath: "/home/dell-01/Poornima/SDO/IOTPLATFORM/iot-platform-sdk-v1.10.2/ocs/config/db"
+    opsConfigPath: "/home/dell-01/Poornima/SDO/IOTPLATFORM/iot-platform-sdk-v1.10.2/ops/config/ondie-ecdsa-material"
+
+replicaCount: 1
+resources: 
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+   limits:
+     cpu: 5000m
+     memory: 500Mi
+   requests:
+     cpu: 100m
+     memory: 200Mi
+
+
+
+#####################################################################################
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

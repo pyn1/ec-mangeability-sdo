@@ -1,0 +1,115 @@
+# Copyright 2020 Intel Corporation
+# SPDX-License-Identifier: Apache 2.0
+# COpied license as is from the SDO Project
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ocs-config
+  #namespace: sdo
+data:
+  SPECIAL_LEVEL: very
+  SPECIAL_TYPE: charm
+  
+  # Application version used for health check request.
+  APPLICATION_VERSION: 1.10.2
+
+  # Port number at which the specific service will be listening for incoming
+  # messages: Number
+  SERVER_PORT: "9009"
+
+  # Path of logback configuration file: URI
+  # If not set, no configuration file will be set.
+  LOGGING_CONFIG: logback-spring.xml
+
+  ##########################
+  # File-system Properties #
+  ##########################
+
+  # Root directory of the file-system database: URI
+  FS_ROOT_DIR: ./db
+
+  # Path to owner's keystore that contains multiple owner key-pairs.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  # Care must be taken to ensure confidentially of these credentials.
+  FS_OWNER_KEYSTORE: v1/creds/owner-keystore.p12
+
+  # Password of the owner keystore as specified by the property fs.owner.keystore.
+  # Every key-pair within the keystore, that are stored as PrivateKeyEntry, MUST
+  # have the exact same password.
+  #
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  FS_OWNER_KEYSTORE_PASSWORD: MLP3QA!Z
+
+  # Path where all the device information are stored: URI
+  FS_DEVICES_DIR: v1/devices
+
+  # Path where service-info files are stored: URI
+  FS_VALUES_DIR: v1/values
+
+  # REST endpoint that points to the API hosted by To0Scheduler: URL
+  # Only domain and port are configurable.
+  # For ex: https://192.168.1.1:8050/v1/to0/devices
+  TO0_REST_API: https://localhost:8049/v1/to0/devices
+
+  # The number of seconds until which TO0 is valid: Number
+  TO0_WAITSECONDS: "7200"
+
+  # The interval in seconds, at which this service makes call to
+  # the url specified by the property to0.rest.api: Number
+  TO0_SCHEDULER_INTERVAL: "60"
+
+  # The flag that enables or disables the SDO Credential-Reuse condition.
+  # If true, OCS sends the same GUID and Rendezvous Instructions.
+  # If false, OCS sends a new GUID and new/same Rendezvous information.
+  TO2_CREDENTIAL_REUSE_ENABLED: "false"
+
+  # The flag that determines whether the Resale protocol is supported by the Owner.
+  # If true, resale protocol is supported as per the specification.
+  # Default: true
+  # TO2_OWNER_RESALE_ENABLED=true
+  ##########################
+  # Mutual TLS Properties #
+  ##########################
+
+  # The keystore-type.
+  SERVER_SSL_KEYSTORE_TYPE: PKCS12
+
+  # The trust-store type.
+  SERVER_SSL_TRUSTSTORE_TYPE: PKCS12
+
+  # Path to keystore file: URI
+  # The certificate inside keystore must have a certificate whose CN or SAN entries allows hostname verification to succeed.
+  # For example, the sample keystore works when the other services are running in the same machine, since the certificate has DNS as localhost.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  # Care must be taken to ensure confidentially of these credentials.
+  SERVER_SSL_KEYSTORE: ./ocs-keystore.p12
+
+  # Path to truststore file: URI
+  # Must contain the certifcates capable of verifying to0scheduler
+  # and OPS.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  # Care must be taken to ensure confidentially of these credentials.
+  SERVER_SSL_TRUSTSTORE: ./ocs-truststore
+
+  # Keystore password.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  SERVER_SSL_KEYSTORE_PASSWORD: RT2y!KlP5
+  # Trust-store password.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  SERVER_SSL_TRUSTSTORE_PASSWORD: SN7wQ$p!1
+
+  # Force Mutual TLS.
+  SERVER_SSL_CLIENT_AUTH: need
+
+  # TLS cipher suites.
+  SERVER_SSL_CIPHERS: TLS_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256
+
+  # TLS protocol version.
+  SERVER_SSL_ENABLED_PROTOCOLS: TLSv1.3
+

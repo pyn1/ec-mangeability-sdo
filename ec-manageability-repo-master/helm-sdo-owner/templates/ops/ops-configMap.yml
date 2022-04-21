@@ -1,0 +1,133 @@
+# Copyright 2020 Intel Corporation
+# SPDX-License-Identifier: Apache 2.0
+# COpied license as is from the SDO Project
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ops-config
+  #namespace: sdo
+data:
+  SPECIAL_LEVEL: very
+  SPECIAL_TYPE: charm
+  # Application version used for health check request.
+  APPLICATION_VERSION: 1.10.2
+
+  # Port number at which the specific service will be listening for incoming
+  # messages: Number
+  SERVER_PORT: "8042"
+
+  # Path of logback configuration file: URI
+  # If not set, no configuration file will be set.
+  LOGGING_CONFIG: logback-spring.xml
+
+  # Total number of threads the TaskExecutor is initalized with (Mandatory).
+  # The default value is 10.
+  THREAD_POOL_SIZE: "10"
+
+  # Optional : URL
+  # The URL of the Epid Verification Service.
+  # If this property is set, the online verification of EPID keys is performed
+  # by making a request to this URL.
+  # For example, https://online-verification-service.com
+  ORG_SDO_EPID_EPID_ONLINE_URL: https://verify.epid-sbx.trustedservices.intel.com/
+
+  # Optional : Boolean
+  # The test-mode parameter indicates whether we should be using EPID development
+  # (sandbox) service for verification of the EPID key. Only the sandbox service
+  # allows usage of test keys.
+  #
+  # If the property org.sdo.epid.epid-online-url is set, this property is ignored.
+  #  If set to true, onboarding of devices using test keys is allowed.
+  # Otherwise, onboarding using test keys is not allowed.
+  #
+  # If not set, the value defaults to false.
+  #
+  # Typically, we need to set this to true while testing C-Code Device with
+  # test EPID keys.
+  #
+  ##### WARNING: This should be disabled in production environment #####
+  #ORG_SDO_EPID_TEST_MODE=
+
+  # Path of the ondie-ecdsa-material: URI
+  ORG_SDO_OPS_ONDIE_ECDSA_MATERIAL_PATH: ondie-ecdsa-material
+
+  # List of URLs seperated by 'comma (,)' as delimiter.
+  # The CRLs will be fetched from the URLs listed.
+  ORG_SDO_OPS_ONDIE_ECDSA_MATERIAL_URLS: https://tsci.intel.com/content/OnDieCA/certs/,https://tsci.intel.com/content/OnDieCA/crls/
+
+  # Boolean
+  # If the value is set to 'true', the on-die ecdsa CRLs will be downloaded from the URLs
+  # listed in ORG_SDO_OPS_ONDIE_ECDSA_MATERIAL_URLS and saved at
+  # ORG_SDO_OPS_ONDIE_ECDSA_MATERIAL_PATH.
+  # Existing CRLs with the same name as that in the URLs, will be owverwritten.
+  ORG_SDO_OPS_ONDIE_ECDSA_MATERIAL_UPDATE: "true"
+
+  ################################
+  # OCS Communication Properties #
+  ################################
+
+  # The domain name and port at which OCS is running: URL
+  REST_API_SERVER: https://localhost:9009/
+  # REST endpoint path at OCS for device state operations: URI
+  REST_API_DEVICE_STATE_PATH: v1/devices/{deviceId}/state
+
+  # REST endpoint path at OCS for device voucher operations: URI
+  REST_API_VOUCHER_PATH: v1/devices/{deviceId}/voucher
+
+  # REST endpoint path at OCS to fetch service-info list: URI
+  REST_API_SERVICEINFO_PATH: v1/devices/{deviceId}/msgs
+
+  # REST endpoint path at OCS to fetch service-info: URI
+  REST_API_SERVICEINFO_VALUE_PATH: v1/devices/{deviceId}/values/{valueId}
+
+  # REST endpoint path at OCS to get pre-service info: URI
+  REST_API_PSI_PATH: v1/devices/{deviceId}/psi
+
+  # REST endpoint path at OCS for protocol error operations: URI
+  REST_API_ERROR_PATH: v1/devices/{deviceId}/errors
+
+  # REST endpoint path at OCS to get device setup information: URI
+  REST_API_SETUPINFO_PATH: v1/devices/{deviceId}/setupinfo
+
+  # REST endpoint path at OCS for signature operations: URI
+  REST_API_SIGNATURE_PATH: v1/signatures/{deviceId}
+
+  # REST endpoint path at OCS for cipher operations: URI
+  REST_API_CIPHERS_PATH: v1/ciphers/{deviceId}
+
+  # REST endpoint path at OCS for session info operations: URI
+  REST_API_SESSION_PATH: v1/devices/{deviceId}/sessioninfo
+  # REST endpoint path at OCS to fetch owner resale support flag per device: URI
+  REST_API_OWNER_RESALE_SUPPORT_PATH: v1/devices/{deviceId}/resale
+
+  # The keystore-type
+  CLIENT_SSL_KEYSTORE_TYPE: PKCS12
+
+  # The truststore-type
+  CLIENT_SSL_TRUSTSTORE_TYPE: PKCS12
+
+  # Path to keystore file: URI
+  # The certificate inside keystore must have a certificate whose CN or SAN entries that allows hostname verification to succeed.
+  # For example, the sample keystore works when the other services are running in the same machine, since the certificate has DNS as localhost.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  # Care must be taken to ensure confidentially of these credentials.
+  CLIENT_SSL_KEYSTORE: ops-keystore.p12
+
+  # Keystore password
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  CLIENT_SSL_KEYSTORE_PASSWORD: MdkRS4_L9
+
+  # Path to truststore file: URI
+  # Must contain the certifcates capable of verifying OCS.
+  #                  
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  # Care must be taken to ensure confidentially of these credentials.
+  CLIENT_SSL_TRUSTSTORE: ops-truststore
+
+  # Truststore password
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  CLIENT_SSL_TRUSTSTORE_PASSWORD: BdGR@7Dj0
+

@@ -1,0 +1,114 @@
+# Copyright 2020 Intel Corporation
+# SPDX-License-Identifier: Apache 2.0
+# COpied license as is from the SDO Project
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: to0scheduler-config
+  #  namespace: sdo
+data:
+  SPECIAL_LEVEL: very
+  SPECIAL_TYPE: charm
+
+  # Application version used for health check request.
+  APPLICATION_VERSION: 1.10.2
+
+  # Port number at which the specific service will be listening for incoming
+  # messages: Number
+  SERVER_PORT: "8049"
+
+  # Path of logback configuration file: URI
+  # If not set, no configuration file will be set.
+  LOGGING_CONFIG: logback-spring.xml
+
+  # The maximum number of To0Sessions that can be queued at once: Number
+  # Must be a sufficiently large number that doesn't affect the performance.
+  SESSION_POOL_SIZE: "20"
+
+  # The number of threads on which the queued To0Sessions will be run: Number
+  # Must be sufficiently large number, much less than the value of the property
+  # session.pool.size, that doesn't affect the performance.
+  THREAD_POOL_SIZE: "15"
+
+  # The duration for which an OP should remain registered in Rendezvous, TO0 timeout: Duration
+  # If not set, default value of 1hour is set.
+  # Example: Set the value as PT30M for 30 minutes
+  ORG_SDO_TO0_OWNERSIGN_TO0D_WS: PT1H
+
+  # Optional : URI of the file containing the following properties:
+  # dns= , DNS name of Owner Protocol service (default : DNS of the system)
+  # ip= , IP address of Owner Protocol service (default : 0.0.0.0)
+  # port= , Port at which Owner Protocol service is listening (default : 8042)
+  # If no URI is specified, the default value of each individual property is used.
+  # POORNIMA: ADD a valid properties
+  ORG_SDO_TO0_OWNERSIGN_TO1D_BO: ./redirect.properties
+
+  # Optional : Boolean
+  # true: Certificate verification is disabled for the outgoing TLS connections to Rendezvous.
+  # false: Certificate validation is done for the outgoing TLS connections to Rendezvous.
+  # Default value: false
+  # ORG_SDO_TO0_TLS_TEST_MODE=false
+
+  #########################################
+  # To0Scheduler Communication Properties #
+  #########################################
+
+  # The domain name ann port at which OCS is running: URL
+  REST_API_SERVER: https://localhost:9009/
+
+  # REST endpoint path at OCS for device state operations: URI
+  REST_API_DEVICE_STATE_PATH: v1/devices/{deviceId}/state
+
+  # REST endpoint path at OCS for device voucher operations: URI
+  REST_API_VOUCHER_PATH: v1/devices/{deviceId}/voucher
+
+  # REST endpoint path at OCS for signature operations: URI
+  REST_API_SIGNATURE_PATH: v1/signatures/{deviceId}
+
+  # REST endpoint path at OCS for protocol error operations: URI
+  REST_API_ERROR_PATH: v1/devices/{deviceId}/errors
+
+  ##########################
+  # Mutual TLS Properties #
+  ##########################
+
+  # The keystore-type
+  SERVER_SSL_KEYSTORE_TYPE: PKCS12
+
+  # The trust-store type
+  SERVER_SSL_TRUSTSTORE_TYPE: PKCS12
+
+  # Path to keystore file: URI
+  # The certificate inside keystore must have a certificate whose CN or SAN entries that allows hostname verification to succeed.
+  # For example, the sample keystore works when the other services are running in the same machine, since the certificate has DNS as localhost.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  # Care must be taken to ensure confidentially of these credentials.
+  SERVER_SSL_KEYSTORE: to0service-keystore.p12
+
+  # Path to truststore file: URI
+  # Must contain the certifcates capable of verifying OCS.
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  # Care must be taken to ensure confidentially of these credentials.
+  SERVER_SSL_TRUSTSTORE: to0service-truststore
+
+  # Keystore password
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  SERVER_SSL_KEYSTORE_PASSWORD: Y9$kEq@8D
+
+  # Trust-store password
+  #
+  # NOTE: This is an example implementation using simplified credentials. This must be changed while performing production deployment.
+  SERVER_SSL_TRUSTSTORE_PASSWORD: Ekd5!9_uO
+
+  # Force Mutual TLS
+  SERVER_SSL_CLIENT_AUTH: need
+
+  # TLS cipher suites
+  SERVER_SSL_CIPHERS: TLS_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256
+
+  # TLS protocol version
+  SERVER_SSL_ENABLED_PROTOCOLS: TLSv1.3
+
